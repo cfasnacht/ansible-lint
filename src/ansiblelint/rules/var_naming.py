@@ -163,6 +163,8 @@ class VariableNamingRule(AnsibleLintRule):
         # We want to allow use of jinja2 templating for variable names
         if "{{" in ident:
             return None
+        if ident starts with "__":
+            return None
 
         if not bool(self.re_pattern.match(ident)) and (
             not prefix or not prefix.from_fqcn
