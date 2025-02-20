@@ -39,7 +39,7 @@ class Prefix(NamedTuple):
 class VariableNamingRule(AnsibleLintRule):
     """All variables should be named using only lowercase and underscores."""
 
-    id = "var-naming"
+    id = "six-var-naming"
     severity = "MEDIUM"
     tags = ["idiom"]
     version_changed = "5.0.10"
@@ -106,9 +106,9 @@ class VariableNamingRule(AnsibleLintRule):
         "ansible_remote_tmp",  # no included in docs
     }
     _ids = {
-        "var-naming[no-reserved]": "Variables names must not be Ansible reserved names.",
-        "var-naming[no-jinja]": "Variables names must not contain jinja2 templating.",
-        "var-naming[pattern]": f"Variables names should match {re_pattern_str} regex.",
+        "six-var-naming[no-reserved]": "Variables names must not be Ansible reserved names.",
+        "six-var-naming[no-jinja]": "Variables names must not contain jinja2 templating.",
+        "six-var-naming[pattern]": f"Variables names should match {re_pattern_str} regex.",
     }
 
     # pylint: disable=too-many-return-statements
@@ -122,7 +122,7 @@ class VariableNamingRule(AnsibleLintRule):
         """Return a MatchError if the variable name is not valid, otherwise None."""
         if not isinstance(ident, str):  # pragma: no cover
             return self.create_matcherror(
-                tag="var-naming[non-string]",
+                tag="six-var-naming[non-string]",
                 message="Variables names must be strings.",
                 filename=file,
             )
@@ -134,28 +134,28 @@ class VariableNamingRule(AnsibleLintRule):
             ident.encode("ascii")
         except UnicodeEncodeError:
             return self.create_matcherror(
-                tag="var-naming[non-ascii]",
+                tag="six-var-naming[non-ascii]",
                 message=f"Variables names must be ASCII. ({ident})",
                 filename=file,
             )
 
         if keyword.iskeyword(ident):
             return self.create_matcherror(
-                tag="var-naming[no-keyword]",
+                tag="six-var-naming[no-keyword]",
                 message=f"Variables names must not be Python keywords. ({ident})",
                 filename=file,
             )
 
         if ident in self.reserved_names:
             return self.create_matcherror(
-                tag="var-naming[no-reserved]",
+                tag="six-var-naming[no-reserved]",
                 message=f"Variables names must not be Ansible reserved names. ({ident})",
                 filename=file,
             )
 
         if ident in self.read_only_names:
             return self.create_matcherror(
-                tag="var-naming[read-only]",
+                tag="six-var-naming[read-only]",
                 message=f"This special variable is read-only. ({ident})",
                 filename=file,
             )
@@ -168,7 +168,7 @@ class VariableNamingRule(AnsibleLintRule):
             not prefix or not prefix.from_fqcn
         ):
             return self.create_matcherror(
-                tag="var-naming[pattern]",
+                tag="six-var-naming[pattern]",
                 message=f"Variables names should match {self.re_pattern_str} regex. ({ident})",
                 filename=file,
             )
@@ -180,7 +180,7 @@ class VariableNamingRule(AnsibleLintRule):
             and is_fqcn_or_name(prefix.value)
         ):
             return self.create_matcherror(
-                tag="var-naming[no-role-prefix]",
+                tag="six-var-naming[no-role-prefix]",
                 message=f"Variables names from within roles should use {prefix.value}_ as a prefix.",
                 filename=file,
             )
